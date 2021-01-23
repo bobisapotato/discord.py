@@ -3,7 +3,7 @@
 """
 The MIT License (MIT)
 
-Copyright (c) 2015-2020 Rapptz
+Copyright (c) 2015-present Rapptz
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the "Software"),
@@ -90,6 +90,15 @@ class Cooldown:
         if current > self._window + self.per:
             tokens = self.rate
         return tokens
+
+    def get_retry_after(self, current=None):
+        current = current or time.time()
+        tokens = self.get_tokens(current)
+
+        if tokens == 0:
+            return self.per - (current - self._window)
+
+        return 0.0
 
     def update_rate_limit(self, current=None):
         current = current or time.time()
